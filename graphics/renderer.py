@@ -2,10 +2,8 @@ from settings import BACKGROUND_COLOR, CENTER_X, CENTER_Y, SCALE
 import pygame
 
 
-
 def draw(screen, objects):
     screen.fill(BACKGROUND_COLOR)
-
 
     for object1 in objects:
         object1_screen_x = CENTER_X + object1.x / SCALE

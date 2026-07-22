@@ -9,7 +9,8 @@ class Camera:
         self.width = WIDTH
         self.height = HEIGHT
 
-        self.speed = 5 * AU
+        self.keyboard_speed = 5 * AU
+        self.mouse_speed = AU / 100
 
     def world_to_screen(self, pos):
         return (

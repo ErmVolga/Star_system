@@ -11,6 +11,9 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 camera = Camera()
 
+dragging = False
+last_mouse_pos = None
+
 pygame.display.set_caption("Солнечная система")
 
 # 1 реальная секунда = dt * тик * PHYSICS_STEPS (с)
@@ -25,25 +28,49 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 3:  # ПКМ
+                dragging = True
+                last_mouse_pos = event.pos
+
+        if event.type == pygame.MOUSEBUTTONUP:
+            if event.button == 3:  # ПКМ
+                dragging = True
+
+        if event.type == pygame.MOUSEMOTION:
+            if dragging:
+                mouse_x, mouse_y = event.pos
+
+                dx = mouse_x - last_mouse_pos[0]
+                dy = mouse_y - last_mouse_pos[1]
+
+                camera.move(
+                    -dx * camera.mouse_speed,
+                    -dy * camera.mouse_speed
+                )
+
+                last_mouse_pos = event.pos
+
     if keys[pygame.K_a]:
         if keys[pygame.K_LSHIFT]:
-            camera.move(-camera.speed / 30, 0)
-        camera.move(-camera.speed / 60, 0)
+            camera.move(-camera.keyboard_speed / 30, 0)
+        camera.move(-camera.keyboard_speed / 60, 0)
 
     if keys[pygame.K_d]:
         if keys[pygame.K_LSHIFT]:
-            camera.move(camera.speed / 30, 0)
-        camera.move(camera.speed / 60, 0)
+            camera.move(camera.keyboard_speed / 30, 0)
+        camera.move(camera.keyboard_speed / 60, 0)
 
     if keys[pygame.K_w]:
         if keys[pygame.K_LSHIFT]:
-            camera.move(0, -camera.speed / 30)
-        camera.move(0, -camera.speed / 60)
+            camera.move(0, -camera.keyboard_speed / 30)
+        camera.move(0, -camera.keyboard_speed / 60)
 
     if keys[pygame.K_s]:
         if keys[pygame.K_LSHIFT]:
-            camera.move(0, camera.speed / 30)
-        camera.move(0, camera.speed / 60)
+            camera.move(0, camera.keyboard_speed / 30)
+        camera.move(0, camera.keyboard_speed / 60)
 
     update(objects, dt)
     draw(screen, objects, camera)

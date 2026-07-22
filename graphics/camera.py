@@ -14,8 +14,8 @@ class Camera:
 
     def world_to_screen(self, pos):
         return (
-            (pos[0] - self.x) / self.scale + self.width / 2,
-            (pos[1] - self.y) / self.scale + self.height / 2
+            pos[0] / self.scale - self.x + self.width / 2,
+            pos[1] / self.scale - self.y + self.height / 2
         )
 
     def move(self, dx, dy):
@@ -23,5 +23,5 @@ class Camera:
         self.y += dy
 
     def drag(self, dx, dy):
-        self.x -= dx * self.scale
-        self.y -= dy * self.scale
+        self.x -= dx
+        self.y -= dy

@@ -11,8 +11,6 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 camera = Camera()
 
-
-
 pygame.display.set_caption("Солнечная система")
 
 # 1 реальная секунда = dt * тик * PHYSICS_STEPS (с)
@@ -28,16 +26,24 @@ while running:
         if event.type == pygame.QUIT:
             running = False
     if keys[pygame.K_a]:
-        camera.x -= speed
+        if keys[pygame.K_LSHIFT]:
+            camera.move(-camera.speed / 30, 0)
+        camera.move(-camera.speed / 60, 0)
 
     if keys[pygame.K_d]:
-        camera.x += speed
+        if keys[pygame.K_LSHIFT]:
+            camera.move(camera.speed / 30, 0)
+        camera.move(camera.speed / 60, 0)
 
     if keys[pygame.K_w]:
-        camera.y -= speed
+        if keys[pygame.K_LSHIFT]:
+            camera.move(0, -camera.speed / 30)
+        camera.move(0, -camera.speed / 60)
 
     if keys[pygame.K_s]:
-        camera.y += speed
+        if keys[pygame.K_LSHIFT]:
+            camera.move(0, camera.speed / 30)
+        camera.move(0, camera.speed / 60)
 
     update(objects, dt)
     draw(screen, objects, camera)

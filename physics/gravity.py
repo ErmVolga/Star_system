@@ -1,34 +1,64 @@
 from settings import PHYSICS_STEPS, G
 from math import sqrt
 
-def universal_gravity(G, m1, m2, r):
-    return G * m1 * m2 / r ** 2
+
+def compute_accelerations(objects):
+    """
+    Вычисляет ускорения для всех объектов (кроме fixed) на основе текущих позиций.
+    Результат записывается в поля ax, ay каждого объекта.
+    """
+    # Обнуляем ускорения для подвижных объектов
+    for obj in objects:
+        if not obj.fixed:
+            obj.ax = 0.0
+            obj.ay = 0.0
+
+    # Для каждой пары объектов вычисляем силу
+    for i, obj1 in enumerate(objects):
+        if obj1.fixed:
+            continue
+        for j, obj2 in enumerate(objects):
+            if i == j:
+                continue
+            dx = obj2.x - obj1.x
+            dy = obj2.y - obj1.y
+            r2 = dx * dx + dy * dy
+            if r2 == 0:
+                continue
+            r = sqrt(r2)
+            # Сила со стороны obj2 на obj1
+            F = G * obj2.mass * obj1.mass / r2
+            # Проекции ускорения
+            obj1.ax += F * dx / r / obj1.mass
+            obj1.ay += F * dy / r / obj1.mass
+
 
 def update(objects, dt):
-    for step in range(PHYSICS_STEPS):
-        for object1 in objects[1:]:
-            object1.ax = 0
-            object1.ay = 0
-            for object2 in objects:
-                dx = object2.x - object1.x
-                dy = object2.y - object1.y
+    """
+    Интегратор Velocity Verlet.
+    Выполняет PHYSICS_STEPS субшагов размером dt.
+    """
+    # Начальное вычисление ускорений (для первого шага)
+    compute_accelerations(objects)
 
-                R = sqrt(dx ** 2 + dy ** 2)
-                if R == 0:
-                    continue
+    for _ in range(PHYSICS_STEPS):
+        # 1. Сохраняем старые ускорения для всех подвижных объектов
+        old_acc = [(obj.ax, obj.ay) for obj in objects if not obj.fixed]
 
-                F = universal_gravity(G, object2.mass, object1.mass, R)
+        # 2. Обновляем положения по Verlet (используем старые ускорения)
+        for obj in objects:
+            if not obj.fixed:
+                obj.x += obj.vx * dt + 0.5 * obj.ax * dt * dt
+                obj.y += obj.vy * dt + 0.5 * obj.ay * dt * dt
 
-                # Единичный вектор
-                ux = dx / R
-                uy = dy / R
+        # 3. Пересчитываем ускорения на новых позициях
+        compute_accelerations(objects)
 
-                # Проекции силы
-                Fx = F * ux
-                Fy = F * uy
-
-                object1.ax += Fx / object1.mass
-                object1.ay += Fy / object1.mass
-
-        for object1 in objects[1:]:
-            object1.update(dt)
+        # 4. Обновляем скорости, используя среднее арифметическое ускорений
+        idx = 0
+        for obj in objects:
+            if not obj.fixed:
+                ax_old, ay_old = old_acc[idx]
+                obj.vx += 0.5 * (ax_old + obj.ax) * dt
+                obj.vy += 0.5 * (ay_old + obj.ay) * dt
+                idx += 1

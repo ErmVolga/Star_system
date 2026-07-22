@@ -1,4 +1,5 @@
-from settings import WIDTH, HEIGHT
+from settings import WIDTH, HEIGHT, SCALE
+
 
 class Camera:
     def __init__(self):
@@ -10,13 +11,6 @@ class Camera:
 
     def world_to_screen(self, pos):
         return (
-            (pos[0] - self.x) + self.width / 2,
-            (pos[1] - self.y) + self.height / 2
-        )
-
-    def screen_to_world(self, pos):
-        return (
-            pos[0] + self.x,
-            pos[1] + self.y
-
+            (pos[0] - self.x) / SCALE + self.width / 2,
+            (pos[1] - self.y) / SCALE + self.height / 2
         )

@@ -10,7 +10,7 @@ pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 camera = Camera()
-keys = pygame.key.get_pressed()
+
 
 
 pygame.display.set_caption("Солнечная система")
@@ -22,21 +22,22 @@ running = True
 while running:
 
     clock.tick(60)
+    keys = pygame.key.get_pressed()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if keys[pygame.K_a]:
-            camera.x -= speed
+    if keys[pygame.K_a]:
+        camera.x -= speed
 
-        if keys[pygame.K_d]:
-            camera.x += speed
+    if keys[pygame.K_d]:
+        camera.x += speed
 
-        if keys[pygame.K_w]:
-            camera.y -= speed
+    if keys[pygame.K_w]:
+        camera.y -= speed
 
-        if keys[pygame.K_s]:
-            camera.y += speed
+    if keys[pygame.K_s]:
+        camera.y += speed
 
     update(objects, dt)
     draw(screen, objects, camera)

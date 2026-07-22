@@ -32,23 +32,22 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 3:  # ПКМ
                 dragging = True
-                last_mouse_pos = event.pos
+                last_mouse_pos = event.mouse.get_pos()
 
         if event.type == pygame.MOUSEBUTTONUP:
             if event.button == 3:  # ПКМ
                 dragging = False
+                last_mouse_pos = None
 
-        if event.type == pygame.MOUSEMOTION and dragging:
-            if last_mouse_pos is not None:
+        if dragging:
+            mouse_pos = pygame.mouse.get_pos()
 
-                mouse_x, mouse_y = event.pos
+            dx = mouse_pos[0] - last_mouse_pos[0]
+            dy = mouse_pos[1] - last_mouse_pos[1]
 
-                dx = mouse_x - last_mouse_pos[0]
-                dy = mouse_y - last_mouse_pos[1]
+            camera.drag(dx, dy)
 
-                camera.drag(dx, dy)
-
-                last_mouse_pos = event.pos
+            last_mouse_pos = mouse_pos
 
     if keys[pygame.K_a]:
         speed = camera.keyboard_speed / 60

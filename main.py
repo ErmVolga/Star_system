@@ -36,41 +36,43 @@ while running:
 
         if event.type == pygame.MOUSEBUTTONUP:
             if event.button == 3:  # ПКМ
-                dragging = True
+                dragging = False
 
-        if event.type == pygame.MOUSEMOTION:
-            if dragging:
+        if event.type == pygame.MOUSEMOTION and dragging:
+            if last_mouse_pos is not None:
+
                 mouse_x, mouse_y = event.pos
 
                 dx = mouse_x - last_mouse_pos[0]
                 dy = mouse_y - last_mouse_pos[1]
 
-                camera.move(
-                    -dx * camera.mouse_speed,
-                    -dy * camera.mouse_speed
-                )
+                camera.drag(dx, dy)
 
                 last_mouse_pos = event.pos
 
     if keys[pygame.K_a]:
+        speed = camera.keyboard_speed / 60
         if keys[pygame.K_LSHIFT]:
-            camera.move(-camera.keyboard_speed / 30, 0)
-        camera.move(-camera.keyboard_speed / 60, 0)
+            speed *= 3
+        camera.move(-speed, 0)
 
     if keys[pygame.K_d]:
+        speed = camera.keyboard_speed / 60
         if keys[pygame.K_LSHIFT]:
-            camera.move(camera.keyboard_speed / 30, 0)
-        camera.move(camera.keyboard_speed / 60, 0)
+            speed *= 3
+        camera.move(speed, 0)
 
     if keys[pygame.K_w]:
+        speed = camera.keyboard_speed / 60
         if keys[pygame.K_LSHIFT]:
-            camera.move(0, -camera.keyboard_speed / 30)
-        camera.move(0, -camera.keyboard_speed / 60)
+            speed *= 3
+        camera.move(0, -speed)
 
     if keys[pygame.K_s]:
+        speed = camera.keyboard_speed / 60
         if keys[pygame.K_LSHIFT]:
-            camera.move(0, camera.keyboard_speed / 30)
-        camera.move(0, camera.keyboard_speed / 60)
+            speed *= 3
+        camera.move(0, speed)
 
     update(objects, dt)
     draw(screen, objects, camera)

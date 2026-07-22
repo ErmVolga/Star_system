@@ -10,7 +10,6 @@ class Camera:
         self.height = HEIGHT
 
         self.keyboard_speed = 5 * AU
-        self.mouse_speed = AU / 100
 
     def world_to_screen(self, pos):
         return (
@@ -21,3 +20,7 @@ class Camera:
     def move(self, dx, dy):
         self.x += dx
         self.y += dy
+
+    def drag(self, dx, dy):
+        self.x -= dx * SCALE
+        self.y -= dy * SCALE

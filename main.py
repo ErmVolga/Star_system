@@ -10,7 +10,7 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Солнечная система")
 
-# 1 реальная секунда = dt * тик PHYSICS_STEPS (с)
+# 1 реальная секунда = dt * тик * PHYSICS_STEPS (с)
 dt = 3600
 
 running = True
@@ -22,7 +22,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-        update(objects, dt)
-        draw(screen, objects)
+    update(objects, dt)
+    draw(screen, objects)
+    pygame.display.flip()
 
 pygame.quit()

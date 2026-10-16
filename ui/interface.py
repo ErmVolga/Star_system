@@ -52,10 +52,6 @@ def draw_hud(screen, dt, steps, extra_lines=None):
         y += s.get_height()
 
 def draw_energy_graph(screen, energies, rect=None):
-    """
-    График энергии по всей истории. Авто-масштаб по Y,
-    прореживание по X, если точек больше, чем пикселей.
-    """
     if not energies:
         return
 
@@ -74,21 +70,27 @@ def draw_energy_graph(screen, energies, rect=None):
     # --- авто-масштаб по Y ---
     emin = min(energies)
     emax = max(energies)
-    if emax - emin < 1e-12:
-        # все значения совпали — рисуем горизонталь по центру
-        emin -= 1.0
-        emax += 1.0
-    pad = (emax - emin) * 0.08
-    emin -= pad
-    emax += pad
+
+    if not (emax > emin):
+        # все значения совпали (или есть NaN) — раздвигаем окно
+        # относительно масштаба самих чисел
+        s = max(abs(emin), abs(emax), 1.0)
+        emin -= s * 0.01
+        emax += s * 0.01
+    else:
+        pad = (emax - emin) * 0.08
+        emin -= pad
+        emax += pad
+
     span = emax - emin
+    if span == 0:
+        span = 1.0
 
     # --- прореживание по X ---
     n = len(energies)
     if n <= w:
         samples = list(energies)
     else:
-        # берём каждую k-ю точку, чтобы вписаться в ширину
         step = n / w
         samples = [energies[int(i * step)] for i in range(w)]
 

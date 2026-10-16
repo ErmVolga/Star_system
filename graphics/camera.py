@@ -19,8 +19,9 @@ class Camera:
         )
 
     def move(self, dx, dy):
-        self.x += dx
-        self.y += dy
+        # dx, dy — в мировых единицах (метрах)
+        self.x += dx / self.scale
+        self.y += dy / self.scale
 
     def drag(self, dx, dy):
         self.x -= dx

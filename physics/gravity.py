@@ -1,4 +1,4 @@
-from settings import PHYSICS_STEPS, G
+import settings
 from math import sqrt
 
 
@@ -27,34 +27,25 @@ def compute_accelerations(objects):
                 continue
             r = sqrt(r2)
             # Сила со стороны obj2 на obj1
-            F = G * obj2.mass * obj1.mass / r2
+            F = settings.G * obj2.mass * obj1.mass / r2
             # Проекции ускорения
             obj1.ax += F * dx / r / obj1.mass
             obj1.ay += F * dy / r / obj1.mass
 
 
-def update(objects, dt):
-    """
-    Интегратор Velocity Verlet.
-    Выполняет PHYSICS_STEPS субшагов размером dt.
-    """
-    # Начальное вычисление ускорений (для первого шага)
+def update(objects, dt, steps):
     compute_accelerations(objects)
 
-    for _ in range(PHYSICS_STEPS):
-        # 1. Сохраняем старые ускорения для всех подвижных объектов
+    for _ in range(steps):
         old_acc = [(obj.ax, obj.ay) for obj in objects if not obj.fixed]
 
-        # 2. Обновляем положения по Verlet (используем старые ускорения)
         for obj in objects:
             if not obj.fixed:
                 obj.x += obj.vx * dt + 0.5 * obj.ax * dt * dt
                 obj.y += obj.vy * dt + 0.5 * obj.ay * dt * dt
 
-        # 3. Пересчитываем ускорения на новых позициях
         compute_accelerations(objects)
 
-        # 4. Обновляем скорости, используя среднее арифметическое ускорений
         idx = 0
         for obj in objects:
             if not obj.fixed:

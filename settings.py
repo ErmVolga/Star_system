@@ -1,6 +1,7 @@
 # Размеры Земли
 EARTH_RADIUS = 6_371_000  # м
 EARTH_MASS = 5.9722e24  # кг
+M_SUN = 332940 * EARTH_MASS
 
 # Астрономическая единица
 AU = 149_597_870_700  # м
@@ -19,8 +20,8 @@ ORANGE = (193, 151, 68)
 BACKGROUND_COLOR = (30, 30, 40)
 
 # Размер окна
-WIDTH = 2460
-HEIGHT = 1340
+WIDTH = 1600
+HEIGHT = 900
 CENTER_X = WIDTH // 2
 CENTER_Y = HEIGHT // 2
 
